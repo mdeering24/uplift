@@ -13,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Uplift.DataAccess.Data.Repository;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Uplift.Utility;
 
 namespace Uplift
 {
@@ -40,6 +42,8 @@ namespace Uplift
                 .AddNewtonsoftJson() //when we call APIs we use this json object
                 .AddRazorRuntimeCompilation(); //Allows razor pages to recompile after changes while app is running
             services.AddRazorPages();
+
+            services.AddSingleton<IEmailSender, EmailSender>();
 
             //Needed for Identity/User logins
             services.ConfigureApplicationCookie(options =>
