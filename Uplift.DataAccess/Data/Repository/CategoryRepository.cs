@@ -18,7 +18,7 @@ namespace Uplift.DataAccess.Data.Repository
         }
         public IEnumerable<SelectListItem> GetCategoryListForDropDown()
         {
-            return _db.Category.Select(i => new SelectListItem()
+            return _db.Categories.Select(i => new SelectListItem()
             {
                 Text = i.Name,
                 Value = i.Id.ToString()
@@ -27,7 +27,7 @@ namespace Uplift.DataAccess.Data.Repository
 
         public void Update(Category category)
         {
-            var objFromDb = _db.Category.FirstOrDefault(s => s.Id == category.Id);
+            var objFromDb = _db.Categories.FirstOrDefault(s => s.Id == category.Id);
             if (objFromDb != null)
             {
                 objFromDb.Name = category.Name;

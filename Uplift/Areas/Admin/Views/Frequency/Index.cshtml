@@ -1,14 +1,13 @@
-﻿
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<br/>
+<br />
 
 <div class="border backgroundWhite p-4">
     <div class="row">
         <div class="col-6">
-            <h2 class="text-primary">Category List</h2>
+            <h2 class="text-primary">Frequency List</h2>
         </div>
         <div class="col-6 text-right">
             <a asp-action="upsert" class="btn btn-primary"><i class="fas fa-plus"></i>&nbsp; Create New</a>
@@ -20,13 +19,13 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Display Order</th>
+                <th>Frequency Count</th>
                 <th></th>
             </tr>
         </thead>
-    </table> 
+    </table>
 </div>
 
-@section Scripts{ 
-    <script src="~/js/category.js"></script>
+@section Scripts{
+    <script src="~/js/frequency.js"></script>
 }

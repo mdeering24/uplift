@@ -1,0 +1,94 @@
+﻿@model Uplift.Models.ViewModels.ServiceVM
+
+@{
+    var title = "Create Serivce";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br/>
+
+<form method="post" asp-for="Upsert" enctype="multipart/form-data">
+    <div class="row px-2 mx-3 backgroundWhite border">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @if (Model.Service.Id != 0)
+        {
+            <input hidden asp-for="Service.Id" />
+            title = "Edit Category";
+        }
+        <div class="col-12">
+            <h2>@title</h2>
+            <br />
+        </div>
+        <div class="col-8">
+            <div class="input-group row">
+                <div class="col-2">
+                    <label asp-for="Service.Name"></label>
+                </div>
+                <div class="col-10">
+                    <input asp-for="Service.Name" />
+                    <span asp-validation-for="Service.Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="input-group row">
+                <div class="col-2">
+                    <label asp-for="Service.Price"></label>
+                </div>
+                <div class="col-10">
+                    <input asp-for="Service.Price" />
+                    <span asp-validation-for="Service.Price" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="input-group row">
+                <div class="col-2">
+                    <label asp-for="Service.LongDesc"></label>
+                </div>
+                <div class="col-10">
+                    <input asp-for="Service.LongDesc" />
+                    <span asp-validation-for="Service.LongDesc" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="input-group row">
+                <div class="col-2">
+                    <label asp-for="Service.Frequency"></label>
+                </div>
+                <div class="col-10">
+                    @Html.DropDownListFor(m => m.Service.FrequencyId, Model.FrequencyList, "--Please Select Frequency--", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="input-group row">
+                <div class="col-2">
+                    <label asp-for="Service.Category"></label>
+                </div>
+                <div class="col-10">
+                    @Html.DropDownListFor(m => m.Service.CategoryId, Model.CategoryList, "--Please Select Category--", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="input-group row">
+                <div class="col-2">
+                    <label asp-for="Service.ImageUrl"></label>
+                </div>
+                <div class="col-10">
+                    <input type="file" name="files" id="uploadBox" multiple class="form-control"/>
+                </div>
+            </div>
+            <div class="input-group row">
+                <div class="col-8 offset-4">
+                    @if (Model.Service.Id != 0)
+                    {
+                        //Edit Button
+                        <partial name="_EditAndBackButton" model="Model.Service.Id" />
+                    }
+                    else
+                    {
+                        //Create Button
+                        <partial name="_CreateAndBackButton" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{ 
+    <partial name="_ValidationScriptsPartial" /> 
+}

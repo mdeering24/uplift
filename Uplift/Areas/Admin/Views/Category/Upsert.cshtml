@@ -1,0 +1,61 @@
+﻿@model Uplift.Models.Category
+
+@{
+    var title = "Create Category";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br/>
+
+<form method="post" asp-for="Upsert">
+    <div class="row px-2 mx-3 backgroundWhite border">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @if (Model.Id != 0)
+        {
+            <input hidden asp-for="Id" />
+            title = "Edit Category";
+        }
+        <div class="col-12">
+            <h2>@title</h2>
+            <br />
+        </div>
+        <div class="col-8">
+            <div class="input-group row">
+                <div class="col-2">
+                    <label asp-for="Name"></label>
+                </div>
+                <div class="col-10">
+                    <input asp-for="Name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="input-group row">
+                <div class="col-2">
+                    <label asp-for="DisplayOrder"></label>
+                </div>
+                <div class="col-10">
+                    <input asp-for="DisplayOrder" />
+                    <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="input-group row">
+                <div class="col-8 offset-4">
+                    @if (Model.Id != 0)
+                    {
+                        //Edit Button
+                        <partial name="_EditAndBackButton" model="Model.Id"/>
+                    }
+                    else
+                    {
+                        //Create Button
+                        <partial name="_CreateAndBackButton" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{ 
+    <partial name="_ValidationScriptsPartial" /> 
+}
