@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Uplift.DataAccess.Data.Repository;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Uplift.Utility;
+using Uplift.Models;
 
 namespace Uplift
 {
@@ -45,6 +46,13 @@ namespace Uplift
 
             services.AddSingleton<IEmailSender, EmailSender>();
 
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromDays(1);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             //Needed for Identity/User logins
             services.ConfigureApplicationCookie(options =>
             {
@@ -70,6 +78,8 @@ namespace Uplift
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSession();
+            app.UseCookiePolicy();
 
             app.UseRouting();
 

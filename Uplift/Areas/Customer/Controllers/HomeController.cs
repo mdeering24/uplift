@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Uplift.DataAccess.Data.Repository;
+using Uplift.Extensions;
 using Uplift.Models;
 using Uplift.Models.ViewModels;
+using Uplift.Utility;
 
 namespace Uplift.Controllers
 {
@@ -36,6 +39,26 @@ namespace Uplift.Controllers
         {
             Service service = _unitOfWork.Service.GetFirstOrDefault(includedProperties: "Category,Frequency", filter: c => c.Id == id);
             return View(service);
+        }
+
+        public IActionResult AddToCart(int id)
+        {
+            List<int> sessionList = new List<int>();
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(SD.SessionCart)))
+            {
+                sessionList.Add(id);
+                HttpContext.Session.SetObject(SD.SessionCart, sessionList);
+            }
+            else
+            {
+                sessionList = HttpContext.Session.GetObject<List<int>>(SD.SessionCart);
+                if (!sessionList.Contains(id))
+                {
+                    sessionList.Add(id);
+                    HttpContext.Session.SetObject(SD.SessionCart, sessionList);
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Privacy()

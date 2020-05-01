@@ -1,0 +1,71 @@
+﻿@model Uplift.Models.ViewModels.CartVM
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form method="post">
+    @if (Model.ServiceList.Count > 0)
+    {
+        <br />
+        <div class="container">
+            <div class="card">
+                <div class="card-header bg-dark text-white ml-0 row container">
+                    <div class="col-12 d-none d-md-block col-md-6 pd-1">
+                        <i class="fas fa-shopping-cart"></i> &nbsp; Shopping Cart
+                    </div>
+                    <div class="col-12 col-md-4 offset-md-2 text-right">
+                        <a asp-action="Index" asp-controller="Home" asp-area="Customer" class="form-control btn btn-outline-info btn-sm">
+                            Home
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @{
+                        var orderTotal = 0.0;
+                    }
+                    @foreach (var service in Model.ServiceList)
+                    {
+                        orderTotal += (service.Price * service.Frequency.Count);
+                        <div class="row">
+                            <div class="d-none d-md-block col-md-2 text-center py-2">
+                                <img src="@service.ImageUrl" class="rounded" width="100%" />
+                            </div>
+                            <div class="col-12 col-md-5 text-md-left">
+                                <h5><strong class="text-primary">@service.Name</strong></h5>
+                                <h5 class="text-secondary">@service.Price.ToString("c")</h5>
+                                <h5 class="text-secondary">@service.Frequency.Name</h5>
+                            </div>
+                            <div class="col-12 col-md-5 row">
+                                <div class="col-6 text-md-right" style="padding-top: 5px">
+                                    <h6><strong class="text-danger">@((service.Price * service.Frequency.Count).ToString("c"))</strong></h6>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <button type="submit" class="btn" asp-action="remove" asp-route-id="@service.Id">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="col-12 text-right pr-4">
+                            <p class="text-success h5">Total (USD): &nbsp; @orderTotal.ToString("c")</p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="col-12 col-6 offset-md-6 col-lg-4 offset-lg-8 text-right">
+                            <a asp-action="Summary" asp-area="Customer" asp-controller="Cart"
+                               class="btn btn-success form-control">Summary</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p>No Items in yo cart</p>
+    }
+</form>
+
