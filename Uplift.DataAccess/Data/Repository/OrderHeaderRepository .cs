@@ -16,7 +16,16 @@ namespace Uplift.DataAccess.Data.Repository
         {
             _db = db;
         }
-        
+
+        public void ChangeStatus(int id, string status)
+        {
+            var objFromDb = _db.OrderHeaders.FirstOrDefault(s => s.Id == id);
+            if (objFromDb != null)
+            {
+                objFromDb.Status = status;
+            }
+        }
+
         public void Update(OrderHeader orderHeader)
         {
             var objFromDb = _db.OrderHeaders.FirstOrDefault(s => s.Id == orderHeader.Id);

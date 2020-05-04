@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Uplift.Models;
+using Uplift.Utility;
 
 namespace Uplift.Areas.Identity.Pages.Account
 {
@@ -23,17 +25,20 @@ namespace Uplift.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _rolemanager;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _rolemanager = roleManager;
         }
 
         [BindProperty]
@@ -60,6 +65,12 @@ namespace Uplift.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+            public string Name { get; set; }
+            public string StreetAddress { get; set; }
+            public string City { get; set; }
+            public string State { get; set; }
+            public string PostalCode { get; set; }
+            public string PhoneNumber { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -74,10 +85,38 @@ namespace Uplift.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+                var user = new ApplicationUser { 
+                    UserName = Input.Email, 
+                    Email = Input.Email,
+                    Name = Input.Name,
+                    PhoneNumber = Input.PhoneNumber,
+                    StreetAddress = Input.StreetAddress,
+                    City = Input.StreetAddress,
+                    State = Input.State,
+                    PostalCode = Input.PostalCode,
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                    if (!await _rolemanager.RoleExistsAsync(SD.Admin))
+                    {
+                        await _rolemanager.CreateAsync(new IdentityRole(SD.Admin));
+                    }
+                    if (!await _rolemanager.RoleExistsAsync(SD.Manager))
+                    {
+                        await _rolemanager.CreateAsync(new IdentityRole(SD.Manager));
+                    }
+
+                    string role = Request.Form["rdUserRole"].ToString();
+                    if (role == SD.Admin)
+                    {
+                        await _userManager.AddToRoleAsync(user, SD.Admin);
+                    }
+                    else if (role == SD.Manager)
+                    {
+                        await _userManager.AddToRoleAsync(user, SD.Manager);
+                    }
+
                     _logger.LogInformation("User created a new account with password.");
 
                     //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -97,7 +136,7 @@ namespace Uplift.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        //await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
                     }
                 }

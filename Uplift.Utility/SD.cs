@@ -11,5 +11,8 @@ namespace Uplift.Utility
         public const string OrderStatusSubmitted = "Submitted";
         public const string OrderStatusApproved = "Approved";
         public const string OrderStatusRejected = "Rejected";
+
+        public const string Admin = "Admin";
+        public const string Manager = "Manager";
     }
 }

@@ -102,7 +102,7 @@ namespace Uplift.Areas.Customer.Controllers
                 return View(cartVM);
             }
             cartVM.OrderHeader.OrderDate = DateTime.Now;
-            cartVM.OrderHeader.State = SD.OrderStatusSubmitted;
+            cartVM.OrderHeader.Status = SD.OrderStatusSubmitted;
             cartVM.OrderHeader.ServiceCount = cartVM.ServiceList.Count;
             _unitOfWork.OrderHeaders.Add(cartVM.OrderHeader);
             _unitOfWork.Save();

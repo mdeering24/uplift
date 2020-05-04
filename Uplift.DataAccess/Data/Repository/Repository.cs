@@ -49,7 +49,12 @@ namespace Uplift.DataAccess.Data.Repository
             {
                 return orderBy(query).ToList();
             }
-            return query.ToList();
+            var results = query.ToList();
+            if (results == null)
+            {
+                return Enumerable.Empty<T>();
+            }
+            return results;
         }
 
         public T GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includedProperties = null)
